@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using Domain.Models;
 
 namespace Domain.ValueObjects
 {
-    public class Cpf
+    public class Cpf : ModelBase
     {
         public Cpf(string numero)
         {
@@ -14,8 +11,34 @@ namespace Domain.ValueObjects
 
         public string Numero { get; private set; }
 
-        public bool Validar()
+        public bool EValido()
         {
+            return ValidarPreenchimento() && ValidarTamanho() && ValidarNumero();
+        }
+
+        public bool ValidarPreenchimento()
+        {
+            if(string.IsNullOrWhiteSpace(Numero))
+                return false;
+
+            return true;
+        }
+
+        public bool ValidarTamanho()
+        {
+            if (Numero.Length != 14)
+            {
+                MensagemValidacao = "É necessário que o Cpf formatado contenha 14 caracteres.";
+                return false;
+            }
+            
+            return true;
+        }
+
+        public bool ValidarNumero()
+        {
+            MensagemValidacao = "É necessário que o Cpf seja um cpf válido.";
+
             string valor = Numero.Replace(".", "");
             valor = valor.Replace("-", "");
 
@@ -69,6 +92,7 @@ namespace Domain.ValueObjects
                 if (numeros[10] != 11 - resultado)
                 return false;
 
+            MensagemValidacao = null;
             return true;
         }
     }

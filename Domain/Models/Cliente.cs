@@ -3,8 +3,9 @@ using System;
 
 namespace Domain.Models
 {
-    public class Cliente
+    public class Cliente : ModelBase
     {
+        public Cliente() { }
         //	Cliente deve conter ao menos um identificador, nome, cpf e idade;
         public Cliente(string nome, string cpf, DateTime dataNascimento)
         {
@@ -26,16 +27,27 @@ namespace Domain.Models
 
         public bool EValido()
         {
-            var valido = Cpf.Validar();
-            valido &= ValidarNome();
-
-            return valido;
+            return ValidarNome() && Cpf.EValido() && ValidarDataNascimento();
         }
 
         public bool ValidarNome()
         {
             if (Nome.Length > 30)
+            {
+                MensagemValidacao = "O campo nome deve conter até 30 caracteres.";
                 return false;
+            }
+            
+            return true;
+        }
+
+        public bool ValidarDataNascimento()
+        {
+            if (DataNascimento == DateTime.MinValue)
+            {
+                MensagemValidacao = "É necessário que a data de nascimento do cliente seja preenchida e esteja em um formato válido.";
+                return false;
+            }
 
             return true;
         }
