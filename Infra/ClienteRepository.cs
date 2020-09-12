@@ -26,13 +26,25 @@ namespace Infra
                 cmd.Parameters.AddWithValue("@dataNascimento", cliente.DataNascimento);
                 con.Open();
                 await cmd.ExecuteNonQueryAsync();
-                con.Close();
             }
         }
 
-        public void Editar(Cliente cliente)
+        public async Task Atualizar(long id, Cliente cliente)
         {
-            throw new NotImplementedException();
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string comandoSQL = "update cliente set nome=@nome, cpf=@cpf, idade=@idade, data_nascimento=@dataNascimento where id=@id";
+                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@nome", cliente.Nome);
+                cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.Numero);
+                cmd.Parameters.AddWithValue("@idade", cliente.Idade);
+                cmd.Parameters.AddWithValue("@dataNascimento", cliente.DataNascimento);
+                cmd.Parameters.AddWithValue("@id", id);
+                con.Open();
+                await cmd.ExecuteNonQueryAsync();
+            }
         }
 
         public void Excluir(int? id)
@@ -56,6 +68,36 @@ namespace Infra
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@cpf", cpf);
+
+                con.Open();
+                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    DateTime dataNascimento;
+
+                    DateTime.TryParse(reader[2].ToString(), out dataNascimento);
+
+                    cliente = new Cliente(reader[0].ToString(), reader[1].ToString(), dataNascimento);
+                }
+
+                reader.Close();
+            }
+
+            return cliente;
+        }
+
+        public async Task<Cliente> ObterAsync(long id)
+        {
+            Cliente cliente = null;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string comandoSQL = "select top 1 nome, cpf, data_nascimento from cliente where id = @id";
+                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
                 SqlDataReader reader = await cmd.ExecuteReaderAsync();

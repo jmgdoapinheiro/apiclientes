@@ -14,7 +14,7 @@ namespace Domain.Models
             DataNascimento = dataNascimento;        
         }
 
-        public int Id { get; private set; }
+        public long Id { get; private set; }
         public string Nome { get; private set; }
         public Cpf Cpf { get; private set; }
         public int Idade { get; set; }

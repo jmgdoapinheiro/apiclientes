@@ -8,8 +8,9 @@ namespace Domain.Interfaces.Repositories
     {
         IEnumerable<Cliente> Listar();
         Task CadastrarAsync(Cliente cliente);
-        void Editar(Cliente cliente);
+        Task Atualizar(long id, Cliente cliente);
         Task<Cliente> ObterAsync(string cpf);
+        Task<Cliente> ObterAsync(long id);
         void Excluir(int? id);
     }
 }

@@ -41,27 +41,47 @@ namespace WebApi.Controllers
         [Route("cadastrar")]
         public async Task<IActionResult> Cadastrar([FromBody] ClienteDto cliente)
         {
+            Response response;
+
             try
             {
-                var response = await _clienteService.CadastrarAsync(cliente);
+                response = await _clienteService.CadastrarAsync(cliente);
 
                 if (!response.Sucesso)
                 {
-                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new Erro(response.Mensagem));
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new { mensagem = response.Mensagem });
                 }
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new Erro("Ocorreu um erro ao tentar salvar o cliente. Favor aguardar uns minutos e tentar novamente."));
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Ocorreu um erro ao tentar cadastrar o cliente. Favor aguardar uns minutos e tentar novamente." });
             }
 
-            return Ok(cliente);
+            return Ok(new { mensagem = response.Mensagem });
         }
 
         // PUT api/<ClienteController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        [Route("atualizar/{id}")]
+        public async Task<IActionResult> Atualizar(int id, [FromBody] ClienteDto cliente)
         {
+            Response response;
+
+            try
+            {
+                response = await _clienteService.AtualizarAsync(id, cliente);
+
+                if (!response.Sucesso)
+                {
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new { mensagem = response.Mensagem });
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Ocorreu um erro ao tentar atualizar o cliente. Favor aguardar uns minutos e tentar novamente." } );
+            }
+
+            return Ok(new { mensagem = response.Mensagem });
         }
 
         // DELETE api/<ClienteController>/5

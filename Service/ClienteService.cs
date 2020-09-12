@@ -24,12 +24,27 @@ namespace Service
             if (!cliente.EValido())
                 return CriarResposta(false, cliente.GetMensagemValidacao());
 
-            if(await _clienteRepository.ObterAsync(cliente.Cpf.Numero) == null)
+            if(await _clienteRepository.ObterAsync(cliente.Cpf.Numero) != null)
                 return CriarResposta(false, "Já existe um cliente com o cpf cadastrado.");
 
             await _clienteRepository.CadastrarAsync(cliente);
 
             return CriarResposta(true, "Cliente cadastrado.");
+        }
+
+        public async Task<Response> AtualizarAsync(long id, ClienteDto dto)
+        {
+            var cliente = ClienteMapper.MapearDtoParaModelo(dto);
+
+            if (!cliente.EValido())
+                return CriarResposta(false, cliente.GetMensagemValidacao());
+
+            if (await _clienteRepository.ObterAsync(id) == null)
+                return CriarResposta(false, "Cliente inexistente.");
+
+            await _clienteRepository.Atualizar(id, cliente);
+
+            return CriarResposta(true, "Cliente atualizado.");
         }
     }
 }
