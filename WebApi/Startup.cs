@@ -24,6 +24,8 @@ namespace WebApi
         {
             services.AddTransient<IClienteService, ClienteService>();
             services.AddTransient<IClienteRepository, ClienteRepository>();
+            services.AddTransient<IEnderecoService, EnderecoService>();
+            services.AddTransient<IEnderecoRepository, EnderecoRepository>();
 
             services.AddControllers();
         }

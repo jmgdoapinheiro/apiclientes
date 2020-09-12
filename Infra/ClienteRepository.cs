@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,13 +13,18 @@ namespace Infra
 {
     public class ClienteRepository : IClienteRepository
     {
-        string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=apiclientes;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private string _connectionString;
+
+        public ClienteRepository(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetSection("ApiClientesDbSettings:ConnectionString").Value;
+        }
 
         public async Task<IEnumerable<ClienteDto>> ListarAsync(Cliente cliente)
         {
             IList<ClienteDto> clientes = new List<ClienteDto>();
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 string comandoSQL = "select nome, cpf, data_nascimento, idade from cliente";
                 string filter = "";
@@ -69,7 +75,7 @@ namespace Infra
 
         public async Task CadastrarAsync(Cliente cliente)
         {
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 string comandoSQL = "insert into cliente (nome,cpf,idade,data_nascimento)values(@nome, @cpf, @idade, @dataNascimento)";
                 SqlCommand cmd = new SqlCommand(comandoSQL, con);
@@ -86,7 +92,7 @@ namespace Infra
 
         public async Task Atualizar(long id, Cliente cliente)
         {
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 string comandoSQL = "update cliente set nome=@nome, cpf=@cpf, idade=@idade, data_nascimento=@dataNascimento where id=@id";
                 SqlCommand cmd = new SqlCommand(comandoSQL, con);
@@ -111,9 +117,9 @@ namespace Infra
         {
             Cliente cliente = null;
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
-                string comandoSQL = "select top 1 nome, cpf, data_nascimento from cliente where cpf = @cpf";
+                string comandoSQL = "select top 1 nome, cpf, data_nascimento, id from cliente where cpf = @cpf";
                 SqlCommand cmd = new SqlCommand(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
@@ -129,6 +135,7 @@ namespace Infra
                     DateTime.TryParse(reader[2].ToString(), out dataNascimento);
 
                     cliente = new Cliente(reader[0].ToString(), reader[1].ToString(), dataNascimento);
+                    cliente.AdiocionarId(Convert.ToInt64(reader[3]));
                 }
 
                 reader.Close();
@@ -141,7 +148,7 @@ namespace Infra
         {
             Cliente cliente = null;
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 string comandoSQL = "select top 1 nome, cpf, data_nascimento from cliente where id = @id";
                 SqlCommand cmd = new SqlCommand(comandoSQL, con);

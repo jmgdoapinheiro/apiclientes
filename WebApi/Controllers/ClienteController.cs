@@ -42,13 +42,6 @@ namespace WebApi.Controllers
             return Ok(clientes);
         }
 
-        // GET api/<ClienteController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<ClienteController>
         [HttpPost]
         [Route("cadastrar")]

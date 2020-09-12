@@ -19,10 +19,21 @@ namespace Domain.Models
         public Cpf Cpf { get; private set; }
         public int Idade { get; set; }
         public DateTime DataNascimento { get; private set; }
+        public Endereco Endereco { get; set; }
+
+        public void AdiocionarId(long id)
+        {
+            Id = id;
+        }
 
         public void AdiocionarIdade(int idade)
         {
             Idade = idade;
+        }
+
+        public void AdiocionarEndereco(Endereco endereco)
+        {
+            Endereco = endereco;
         }
 
         public bool EValido()

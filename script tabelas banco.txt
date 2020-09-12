@@ -1,0 +1,21 @@
+CREATE TABLE [dbo].[cliente] (
+    [id]              BIGINT        IDENTITY (1, 1) NOT NULL,
+    [nome]            NVARCHAR (30) NOT NULL,
+    [cpf]             NCHAR (14)    NOT NULL,
+    [data_nascimento] DATETIME      NOT NULL,
+    [idade]           INT           NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+
+CREATE TABLE [dbo].[endereco]
+(
+	[id_cliente] BIGINT NOT NULL PRIMARY KEY, 
+    [logradouro] NCHAR(50) NOT NULL, 
+    [bairro] NCHAR(40) NOT NULL, 
+    [cidade] NCHAR(40) NOT NULL, 
+    [estado] NCHAR(40) NOT NULL, 
+    CONSTRAINT [FK_endereco_cliente] FOREIGN KEY ([id_cliente]) REFERENCES [cliente]([id]) ON DELETE CASCADE
+)
+
+
