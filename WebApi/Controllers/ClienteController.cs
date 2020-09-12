@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Domain.DTOs;
 using Domain.Interfaces.Services;
+using Domain.Models;
 using Infra.CrossCutting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,21 @@ namespace WebApi.Controllers
 
         // GET: api/<ClienteController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("listar")]
+        public async Task<IActionResult> Listar([FromQuery] ClienteDto cliente)
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<ClienteDto> clientes;
+
+            try
+            {
+                clientes = await _clienteService.ListarAsync(cliente);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Ocorreu um erro ao tentar cadastrar o cliente. Favor aguardar uns minutos e tentar novamente." });
+            }
+
+            return Ok(clientes);
         }
 
         // GET api/<ClienteController>/5

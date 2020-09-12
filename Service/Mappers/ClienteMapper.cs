@@ -1,6 +1,8 @@
 ﻿using Domain.DTOs;
 using Domain.Models;
 using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace Service.Mappers
 {
@@ -13,6 +15,6 @@ namespace Service.Mappers
             DateTime.TryParse(dto.DataNascimento, out dataNascimento);
 
             return new Cliente(dto.Nome, dto.Cpf, dataNascimento);
-        } 
+        }
     }
 }

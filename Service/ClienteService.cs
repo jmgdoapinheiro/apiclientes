@@ -4,6 +4,7 @@ using Domain.Interfaces.Services;
 using Domain.Models;
 using Infra.CrossCutting;
 using Service.Mappers;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Service
@@ -15,6 +16,13 @@ namespace Service
         public ClienteService(IClienteRepository clienteRepository)
         {
             _clienteRepository = clienteRepository;
+        }
+
+        public async Task<IEnumerable<ClienteDto>> ListarAsync(ClienteDto dto)
+        {
+            var cliente = ClienteMapper.MapearDtoParaModelo(dto);
+
+            return await _clienteRepository.ListarAsync(cliente);
         }
 
         public async Task<Response> CadastrarAsync(ClienteDto dto)

@@ -1,9 +1,11 @@
-﻿using Domain.Interfaces.Repositories;
+﻿using Domain.DTOs;
+using Domain.Interfaces.Repositories;
 using Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infra
@@ -11,6 +13,59 @@ namespace Infra
     public class ClienteRepository : IClienteRepository
     {
         string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=apiclientes;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+
+        public async Task<IEnumerable<ClienteDto>> ListarAsync(Cliente cliente)
+        {
+            IList<ClienteDto> clientes = new List<ClienteDto>();
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                string comandoSQL = "select nome, cpf, data_nascimento, idade from cliente";
+                string filter = "";
+
+                if (!string.IsNullOrWhiteSpace(cliente.Cpf.Numero))
+                    filter += "cpf like " + "'%" + cliente.Cpf.Numero + "%'";
+
+                if (!string.IsNullOrWhiteSpace(cliente.Nome))
+                {
+                    if(!string.IsNullOrEmpty(filter))
+                        filter += " and ";
+
+                    filter += "nome like " + "'%" + cliente.Nome + "%'";
+                }
+
+                if (!string.IsNullOrEmpty(filter))
+                    comandoSQL += " where " + filter;
+                
+                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+
+                cmd.CommandType = CommandType.Text;
+
+                con.Open();
+                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+                while (reader.Read())
+                {
+                    DateTime dataNascimento;
+
+                    DateTime.TryParse(reader[2].ToString(), out dataNascimento);
+
+                    cliente = new Cliente(reader[0].ToString(), reader[1].ToString(), dataNascimento);
+
+                    clientes.Add(
+                        new ClienteDto { 
+                           Nome = reader[0].ToString(), 
+                           Cpf = reader[1].ToString(), 
+                           DataNascimento = dataNascimento.ToString("dd/MM/yyyy HH:mm:ss") 
+                        }
+                    );
+                }
+
+                reader.Close();
+            }
+
+            return clientes.AsEnumerable();
+        }
 
         public async Task CadastrarAsync(Cliente cliente)
         {
@@ -48,11 +103,6 @@ namespace Infra
         }
 
         public void Excluir(int? id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Cliente> Listar()
         {
             throw new NotImplementedException();
         }
