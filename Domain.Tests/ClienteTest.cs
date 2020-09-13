@@ -38,5 +38,13 @@ namespace Domain.Tests
 
             Assert.IsTrue(cliente.ValidarDataNascimento());
         }
+
+        [TestMethod]
+        public void DataNascimento_Futura()
+        {
+            var cliente = new Cliente("Joao Pinheiro", "22089226030", new DateTime(2100, 1, 1));
+
+            Assert.IsFalse(cliente.ValidarDataNascimento());
+        }
     }
 }

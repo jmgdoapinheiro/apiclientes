@@ -60,6 +60,12 @@ namespace Domain.Models
                 return false;
             }
 
+            if (DataNascimento > DateTime.Now)
+            {
+                MensagemValidacao = "A data de nascimento não poder ser uma data futura.";
+                return false;
+            }
+
             return true;
         }
     }
