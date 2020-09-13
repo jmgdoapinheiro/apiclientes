@@ -20,7 +20,7 @@ namespace Infra
             _connectionString = configuration.GetSection("ApiClientesDbSettings:ConnectionString").Value;
         }
 
-        public async Task<IEnumerable<ListarClienteDto>> ListarAsync(Cliente cliente)
+        public async Task<IEnumerable<ListarClienteDto>> ListarAsync(ClienteDto clienteDto)
         {
             IList<ListarClienteDto> clientes = new List<ListarClienteDto>();
 
@@ -29,15 +29,15 @@ namespace Infra
                 string comandoSQL = "select nome, cpf, idade from cliente";
                 string filter = "";
 
-                if (!string.IsNullOrWhiteSpace(cliente.Cpf.Numero))
-                    filter += "cpf like " + "'%" + cliente.Cpf.Numero + "%'";
+                if (!string.IsNullOrWhiteSpace(clienteDto.Cpf))
+                    filter += "cpf like " + "'%" + clienteDto.Cpf + "%'";
 
-                if (!string.IsNullOrWhiteSpace(cliente.Nome))
+                if (!string.IsNullOrWhiteSpace(clienteDto.Nome))
                 {
                     if(!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "nome like " + "'%" + cliente.Nome + "%'";
+                    filter += "nome like " + "'%" + clienteDto.Nome + "%'";
                 }
 
                 if (!string.IsNullOrEmpty(filter))
@@ -52,8 +52,6 @@ namespace Infra
 
                 while (reader.Read())
                 {
-                    cliente = new Cliente(reader[0].ToString(), reader[1].ToString(), DateTime.Now);
-
                     clientes.Add(
                         new ListarClienteDto
                         { 
