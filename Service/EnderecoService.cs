@@ -18,60 +18,82 @@ namespace Service
             _enderecoRepository = enderecoRepository;
         }
 
-        public async Task<Response<EnderecoDto>> ListarAsync(EnderecoDto enderecoDto)
+        public async Task<ResponseGeneric<EnderecoDto>> ListarAsync(EnderecoDto enderecoDto)
         {
-            var response = CriarResposta<EnderecoDto>(true, null);
-
-            response.AdicionarListaDto(await _enderecoRepository.ListarAsync(enderecoDto));
-
-            return response;
+            try
+            {
+                return CriarResposta(OK, true, null, await _enderecoRepository.ListarAsync(enderecoDto));
+            }
+            catch (System.Exception)
+            {
+                return CriarResposta<EnderecoDto>(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar listar enderecos. Favor aguardar uns minutos e tentar novamente.");
+            }
         }
 
         public async Task<Response> CadastrarAsync(EnderecoDto dto)
         {
-            var cliente = await _clienteRepository.ObterAsync(dto.Cpf);
+            try
+            {
+                var cliente = await _clienteRepository.ObterAsync(dto.Cpf);
 
-            if (cliente == null) return CriarResposta(false, "Cliente inexistente.");
+                if (cliente == null) return CriarResposta(UNPROCESSABLE_ENTITY, false, "Cliente inexistente.");
 
-            if(await _enderecoRepository.ObterAsync(cliente.Id) != null) return CriarResposta(false, "Já existe um endereço para esse cliente.");
+                if (await _enderecoRepository.ObterAsync(cliente.Id) != null) return CriarResposta(UNPROCESSABLE_ENTITY, false, "Já existe um endereço para esse cliente.");
 
-            var endereco = EnderecoMapper.MapearDtoParaModelo(cliente.Id, dto);
+                var endereco = EnderecoMapper.MapearDtoParaModelo(cliente.Id, dto);
 
-            if (!endereco.EValido())
-                return CriarResposta(false, cliente.GetMensagemValidacao());
+                if (!endereco.EValido())
+                    return CriarResposta(UNPROCESSABLE_ENTITY, false, cliente.GetMensagemValidacao());
 
-            await _enderecoRepository.CadastrarAsync(endereco);
+                await _enderecoRepository.CadastrarAsync(endereco);
 
-            return CriarResposta(true, "Endereço cadastrado.");
+                return CriarResposta(OK, true, "Endereço cadastrado.");
+
+            }
+            catch (System.Exception)
+            {
+                return CriarResposta(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar cadastrar o endereço. Favor aguardar uns minutos e tentar novamente.");
+            }
         }
 
         public async Task<Response> AtualizarAsync(long idCliente, EnderecoDto dto)
         {
-            var cliente = await _clienteRepository.ObterAsync(dto.Cpf);
+            try
+            {
+                if (await _enderecoRepository.ObterAsync(idCliente) == null) return CriarResposta(UNPROCESSABLE_ENTITY, false, "Não existe um endereço para esse cliente.");
 
-            if (cliente == null) return CriarResposta(false, "Cliente inexistente.");
+                var endereco = EnderecoMapper.MapearDtoParaModelo(idCliente, dto);
 
-            if (await _enderecoRepository.ObterAsync(cliente.Id) == null) return CriarResposta(false, "Não existe um endereço para esse cliente.");
+                if (!endereco.EValido())
+                    return CriarResposta(UNPROCESSABLE_ENTITY, false, endereco.GetMensagemValidacao());
 
-            var endereco = EnderecoMapper.MapearDtoParaModelo(idCliente, dto);
+                await _enderecoRepository.AtualizarAsync(endereco);
 
-            if (!endereco.EValido())
-                return CriarResposta(false, endereco.GetMensagemValidacao());
-
-            await _enderecoRepository.AtualizarAsync(endereco);
-
-            return CriarResposta(true, "Endereço atualizado.");
+                return CriarResposta(OK, true, "Endereço atualizado.");
+            }
+            catch (System.Exception)
+            {
+                return CriarResposta(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar atualizar o endereço. Favor aguardar uns minutos e tentar novamente.");
+            }
         }
 
         public async Task<Response> ExcluirAsync(long idCliente)
         {
-            var endereco = await _enderecoRepository.ObterAsync(idCliente);
+            try
+            {
+                var endereco = await _enderecoRepository.ObterAsync(idCliente);
 
-            if (endereco == null) return CriarResposta(false, "Endereco inexistente.");
+                if (endereco == null) return CriarResposta(UNPROCESSABLE_ENTITY, false, "Endereco inexistente.");
 
-            await _enderecoRepository.ExcluirAsync(idCliente);
+                await _enderecoRepository.ExcluirAsync(idCliente);
 
-            return CriarResposta(true, "Endereço excluído.");
+                return CriarResposta(OK, true, "Endereço excluído.");
+
+            }
+            catch (System.Exception)
+            {
+                return CriarResposta(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar excluir o endereço. Favor aguardar uns minutos e tentar novamente.");
+            }
         }
     }
 }

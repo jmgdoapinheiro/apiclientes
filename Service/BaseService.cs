@@ -1,17 +1,27 @@
 ﻿using Infra.CrossCutting;
+using System.Collections.Generic;
 
 namespace Service
 {
     public class BaseService
     {
-        protected Response CriarResposta(bool sucesso, string mensagem)
+        protected const int OK = 200;
+        protected const int UNPROCESSABLE_ENTITY = 422;
+        protected const int INTERNAL_SERVER_ERROR = 500;
+
+        protected Response CriarResposta(int statusCode, bool sucesso, string mensagem)
         {
-            return new Response(sucesso, mensagem);
+            return new Response(statusCode, sucesso, mensagem);
         }
 
-        protected Response<T> CriarResposta<T>(bool sucesso, string mensagem)
+        protected ResponseGeneric<T> CriarResposta<T>(int statusCode, bool sucesso, string mensagem, IEnumerable<T> listaDto = null)
         {
-            return new Response<T>(sucesso, mensagem);
+            var response = new ResponseGeneric<T>(statusCode, sucesso, mensagem);
+            
+            if(listaDto != null)
+                response.AdicionarListaDto(listaDto);
+            
+            return response;
         }
     }
 }

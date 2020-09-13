@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Infra.CrossCutting
 {
-    public class Response<T> : Response
+    public class ResponseGeneric<T> : Response
     {
-        public Response(bool sucesso, string mensagem) : base(sucesso, mensagem){}
+        public ResponseGeneric(int statusCode, bool sucesso, string mensagem) : base(statusCode, sucesso, mensagem){}
 
         public IEnumerable<T> ListaDto { get; private set; }
 
