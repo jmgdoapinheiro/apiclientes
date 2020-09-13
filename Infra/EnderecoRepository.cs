@@ -71,7 +71,7 @@ namespace Infra
             }
         }
 
-        public async Task<IEnumerable<EnderecoDto>> ListarAsync(Cliente cliente, Endereco endereco)
+        public async Task<IEnumerable<EnderecoDto>> ListarAsync(EnderecoDto enderecoDto)
         {
             IList<EnderecoDto> enderecos = new List<EnderecoDto>();
 
@@ -80,47 +80,47 @@ namespace Infra
                 string comandoSQL = "select nome, cpf, logradouro, bairro, cidade, estado from cliente c inner join endereco e on c.id = e.id_cliente";
                 string filter = "";
 
-                if (!string.IsNullOrWhiteSpace(cliente.Cpf.Numero))
-                    filter += "cpf like " + "'%" + cliente.Cpf.Numero + "%'";
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Cpf))
+                    filter += "cpf like " + "'%" + enderecoDto.Cpf + "%'";
 
-                if (!string.IsNullOrWhiteSpace(cliente.Nome))
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Cliente))
                 {
                     if (!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "nome like " + "'%" + cliente.Nome + "%'";
+                    filter += "nome like " + "'%" + enderecoDto.Cliente + "%'";
                 }
 
-                if (!string.IsNullOrWhiteSpace(endereco.Logradouro))
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Logradouro))
                 {
                     if (!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "logradouro like " + "'%" + endereco.Logradouro + "%'";
+                    filter += "logradouro like " + "'%" + enderecoDto.Logradouro + "%'";
                 }
 
-                if (!string.IsNullOrWhiteSpace(endereco.Bairro))
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Bairro))
                 {
                     if (!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "bairro like " + "'%" + endereco.Bairro + "%'";
+                    filter += "bairro like " + "'%" + enderecoDto.Bairro + "%'";
                 }
 
-                if (!string.IsNullOrWhiteSpace(endereco.Cidade))
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Cidade))
                 {
                     if (!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "cidade like " + "'%" + endereco.Cidade + "%'";
+                    filter += "cidade like " + "'%" + enderecoDto.Cidade + "%'";
                 }
 
-                if (!string.IsNullOrWhiteSpace(endereco.Estado))
+                if (!string.IsNullOrWhiteSpace(enderecoDto.Estado))
                 {
                     if (!string.IsNullOrEmpty(filter))
                         filter += " and ";
 
-                    filter += "estado like " + "'%" + endereco.Estado + "%'";
+                    filter += "estado like " + "'%" + enderecoDto.Estado + "%'";
                 }
 
                 if (!string.IsNullOrEmpty(filter))

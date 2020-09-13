@@ -135,7 +135,7 @@ namespace Infra
                 while (reader.Read())
                 {
                     cliente = new Cliente(reader[0].ToString(), reader[1].ToString(), DateTime.Now);
-                    cliente.AdiocionarId(Convert.ToInt64(reader[3]));
+                    cliente.AdiocionarId(Convert.ToInt64(reader[2]));
                 }
 
                 reader.Close();

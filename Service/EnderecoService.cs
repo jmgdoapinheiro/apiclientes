@@ -18,19 +18,11 @@ namespace Service
             _enderecoRepository = enderecoRepository;
         }
 
-        //public async Task<IEnumerable<EnderecoDto>> ListarAsync(ClienteDto clienteDto, EnderecoDto enderecoDto)
         public async Task<Response<EnderecoDto>> ListarAsync(EnderecoDto enderecoDto)
         {
-            var cliente = await _clienteRepository.ObterAsync(enderecoDto.Cpf);
-
-            if (cliente == null)
-                return CriarResposta<EnderecoDto>(false, "Para realizar essa consulta, é necessários que o cpf do cliente seja cadastrado.");
-
-            var endereco = EnderecoMapper.MapearDtoParaModelo(cliente.Id, enderecoDto);
-
             var response = CriarResposta<EnderecoDto>(true, null);
 
-            response.AdicionarListaDto(await _enderecoRepository.ListarAsync(cliente, endereco));
+            response.AdicionarListaDto(await _enderecoRepository.ListarAsync(enderecoDto));
 
             return response;
         }
