@@ -91,9 +91,27 @@ namespace WebApi.Controllers
         }
 
         // DELETE api/<ClienteController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete]
+        [Route("excluir/{id}")]
+        public async Task<IActionResult> Excluir(long id)
         {
+            Response response;
+
+            try
+            {
+                response = await _clienteService.ExcluirAsync(id);
+
+                if (!response.Sucesso)
+                {
+                    return StatusCode(StatusCodes.Status422UnprocessableEntity, new { mensagem = response.Mensagem });
+                }
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Ocorreu um erro ao tentar excluir o cliente. Favor aguardar uns minutos e tentar novamente." });
+            }
+
+            return Ok(new { mensagem = response.Mensagem });
         }
     }
 }

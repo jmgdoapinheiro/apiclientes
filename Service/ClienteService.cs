@@ -54,5 +54,16 @@ namespace Service
 
             return CriarResposta(true, "Cliente atualizado.");
         }
+
+        public async Task<Response> ExcluirAsync(long id)
+        {
+            var cliente = await _clienteRepository.ObterAsync(id);
+
+            if (cliente == null) return CriarResposta(false, "Cliente inexistente.");
+
+            await _clienteRepository.ExcluirAsync(id);
+
+            return CriarResposta(true, "Cliente excluído.");
+        }
     }
 }

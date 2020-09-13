@@ -12,6 +12,6 @@ namespace Domain.Interfaces.Repositories
         Task Atualizar(long id, Cliente cliente);
         Task<Cliente> ObterAsync(string cpf);
         Task<Cliente> ObterAsync(long id);
-        void Excluir(int? id);
+        Task ExcluirAsync(long id);
     }
 }

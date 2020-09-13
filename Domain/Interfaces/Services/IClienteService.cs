@@ -11,5 +11,6 @@ namespace Domain.Interfaces.Services
         Task<IEnumerable<ClienteDto>> ListarAsync(ClienteDto cliente);
         Task<Response> CadastrarAsync(ClienteDto cliente);
         Task<Response> AtualizarAsync(long id, ClienteDto cliente);
+        Task<Response> ExcluirAsync(long idCliente);
     }
 }

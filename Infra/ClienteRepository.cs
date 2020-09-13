@@ -108,9 +108,18 @@ namespace Infra
             }
         }
 
-        public void Excluir(int? id)
+        public async Task ExcluirAsync(long id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string comandoSQL = "delete from cliente where id=@id";
+                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@id", id);
+                con.Open();
+                await cmd.ExecuteNonQueryAsync();
+            }
         }
 
         public async Task<Cliente> ObterAsync(string cpf)
