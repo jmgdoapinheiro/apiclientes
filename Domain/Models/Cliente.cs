@@ -26,9 +26,9 @@ namespace Domain.Models
             Id = id;
         }
 
-        public void AdiocionarIdade(int idade)
+        public void AdicionarIdade()
         {
-            Idade = idade;
+            Idade = CalcularIdade(DateTime.Now);
         }
 
         public void AdiocionarEndereco(Endereco endereco)
@@ -67,6 +67,16 @@ namespace Domain.Models
             }
 
             return true;
+        }
+
+        public int CalcularIdade(DateTime hoje)
+        {
+            int idade = hoje.Year - DataNascimento.Year;
+
+            if (hoje.DayOfYear < DataNascimento.DayOfYear)
+                idade = idade - 1;
+
+            return idade;
         }
     }
 }

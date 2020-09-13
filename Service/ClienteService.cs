@@ -18,7 +18,7 @@ namespace Service
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<IEnumerable<ClienteDto>> ListarAsync(ClienteDto dto)
+        public async Task<IEnumerable<ListarClienteDto>> ListarAsync(ClienteDto dto)
         {
             var cliente = ClienteMapper.MapearDtoParaModelo(dto);
 

@@ -7,7 +7,7 @@ namespace Domain.Interfaces.Repositories
 {
     public interface IClienteRepository
     {
-        Task<IEnumerable<ClienteDto>> ListarAsync(Cliente cliente);
+        Task<IEnumerable<ListarClienteDto>> ListarAsync(Cliente cliente);
         Task CadastrarAsync(Cliente cliente);
         Task Atualizar(long id, Cliente cliente);
         Task<Cliente> ObterAsync(string cpf);

@@ -46,5 +46,21 @@ namespace Domain.Tests
 
             Assert.IsFalse(cliente.ValidarDataNascimento());
         }
+
+        [TestMethod]
+        public void Calcular_Idade_Apos_Aniversario()
+        {
+            var cliente = new Cliente("Joao Pinheiro", "22089226030", new DateTime(2000, 1, 1));
+            
+            Assert.IsTrue(cliente.CalcularIdade(new DateTime(2020, 9, 1)) == 20);
+        }
+
+        [TestMethod]
+        public void Calcular_Idade_Antes_Aniversario()
+        {
+            var cliente = new Cliente("Joao Pinheiro", "22089226030", new DateTime(2000, 10, 1));
+
+            Assert.IsTrue(cliente.CalcularIdade(new DateTime(2020, 9, 1)) == 19);
+        }
     }
 }

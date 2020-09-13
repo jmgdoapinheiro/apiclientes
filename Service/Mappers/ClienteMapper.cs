@@ -14,7 +14,11 @@ namespace Service.Mappers
 
             DateTime.TryParse(dto.DataNascimento, out dataNascimento);
 
-            return new Cliente(dto.Nome, dto.Cpf, dataNascimento);
+            var cliente = new Cliente(dto.Nome, dto.Cpf, dataNascimento);
+
+            cliente.AdicionarIdade();
+            
+            return cliente;
         }
     }
 }

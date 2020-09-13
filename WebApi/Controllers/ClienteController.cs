@@ -24,11 +24,11 @@ namespace WebApi.Controllers
         }
 
         // GET: api/<ClienteController>
-        [HttpGet]
+        [HttpPost]
         [Route("listar")]
-        public async Task<IActionResult> Listar([FromQuery] ClienteDto cliente)
+        public async Task<IActionResult> Listar([FromBody] ClienteDto cliente)
         {
-            IEnumerable<ClienteDto> clientes;
+            IEnumerable<ListarClienteDto> clientes;
 
             try
             {
@@ -58,7 +58,7 @@ namespace WebApi.Controllers
                     return StatusCode(StatusCodes.Status422UnprocessableEntity, new { mensagem = response.Mensagem });
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { mensagem = "Ocorreu um erro ao tentar cadastrar o cliente. Favor aguardar uns minutos e tentar novamente." });
             }
