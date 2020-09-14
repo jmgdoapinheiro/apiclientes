@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  webapi:
+    image: apiclientes
+    build:
+      context: .
+      dockerfile: WebApi/Dockerfile
+    ports:
+        - 8181:80
+    depends_on:
+      - apiclientes_db
+    networks:
+        - apiclientes_network      
+  apiclientes_db:
+    build: ./Db
+    ports:
+    - 3306:3306
+    networks:
+        - apiclientes_network
+
+
+networks:
+  apiclientes_network:
+    name: apiclientes_network

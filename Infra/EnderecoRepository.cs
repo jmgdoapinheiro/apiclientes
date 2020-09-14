@@ -1,7 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces.Repositories;
-using Domain.Models;
 using Domain.ValueObjects;
+using Infra.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -14,19 +14,19 @@ namespace Infra
 {
     public class EnderecoRepository : IEnderecoRepository
     {
-        private string _connectionString;
+        private readonly IApiClientesContext _apiClientesContext;
 
-        public EnderecoRepository(IConfiguration configuration)
+        public EnderecoRepository(IApiClientesContext apiClientesContext)
         {
-            _connectionString = configuration.GetSection("ApiClientesDbSettings:ConnectionString").Value;
+            _apiClientesContext = apiClientesContext;
         }
 
         public async Task AtualizarAsync(Endereco endereco)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "update endereco set logradouro=@logradouro, bairro=@bairro, cidade=@cidade, estado=@estado where id_cliente=@idCliente";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@idCliente", endereco.IdCliente);
@@ -41,10 +41,10 @@ namespace Infra
 
         public async Task CadastrarAsync(Endereco endereco)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "insert into endereco (id_cliente,logradouro,bairro,cidade,estado)values(@idCliente, @logradouro, @bairro, @cidade, @estado)";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@idCliente", endereco.IdCliente);
@@ -59,10 +59,10 @@ namespace Infra
 
         public async Task ExcluirAsync(long idCliente)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "delete from endereco where id_cliente=@idCliente";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@idCliente", idCliente);
@@ -75,7 +75,7 @@ namespace Infra
         {
             IList<EnderecoDto> enderecos = new List<EnderecoDto>();
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "select nome, cpf, logradouro, bairro, cidade, estado from cliente c inner join endereco e on c.id = e.id_cliente";
                 string filter = "";
@@ -126,12 +126,12 @@ namespace Infra
                 if (!string.IsNullOrEmpty(filter))
                     comandoSQL += " where " + filter;
 
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
 
                 con.Open();
-                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -158,16 +158,16 @@ namespace Infra
         {
             Endereco endereco = null;
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
-                string comandoSQL = "select top 1 id_cliente, logradouro, bairro, cidade, estado from endereco where id_cliente = @idCliente";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                string comandoSQL = "select id_cliente, logradouro, bairro, cidade, estado from endereco where id_cliente = @idCliente limit 1";
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@idCliente", idCliente);
 
                 con.Open();
-                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {

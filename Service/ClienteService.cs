@@ -22,7 +22,7 @@ namespace Service
             {
                 return CriarResposta(OK, true, null, await _clienteRepository.ListarAsync(clienteDto));
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 return CriarResposta<ListarClienteDto>(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar listar clientes. Favor aguardar uns minutos e tentar novamente.");
             }
@@ -66,7 +66,7 @@ namespace Service
 
                 return CriarResposta(OK, true, "Cliente atualizado.");
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 return CriarResposta(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar atualizar o cliente. Favor aguardar uns minutos e tentar novamente.");
             }

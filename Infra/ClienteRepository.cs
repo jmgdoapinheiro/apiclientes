@@ -1,11 +1,11 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
+using Infra.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,18 +13,19 @@ namespace Infra
 {
     public class ClienteRepository : IClienteRepository
     {
-        private string _connectionString;
+        private readonly IApiClientesContext _apiClientesContext;
 
-        public ClienteRepository(IConfiguration configuration)
+        public ClienteRepository(IApiClientesContext apiClientesContext)
         {
-            _connectionString = configuration.GetSection("ApiClientesDbSettings:ConnectionString").Value;
+            _apiClientesContext = apiClientesContext;
         }
 
         public async Task<IEnumerable<ListarClienteDto>> ListarAsync(ClienteDto clienteDto)
         {
             IList<ListarClienteDto> clientes = new List<ListarClienteDto>();
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            //using (MySqlConnection con = new MySqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "select nome, cpf, idade from cliente";
                 string filter = "";
@@ -42,13 +43,13 @@ namespace Infra
 
                 if (!string.IsNullOrEmpty(filter))
                     comandoSQL += " where " + filter;
-                
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
 
                 con.Open();
-                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -70,11 +71,11 @@ namespace Infra
 
         public async Task CadastrarAsync(Cliente cliente)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "insert into cliente (nome,cpf,idade)values(@nome, @cpf, @idade)";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
-                
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
+
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@nome", cliente.Nome);
                 cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.Numero);
@@ -86,10 +87,10 @@ namespace Infra
 
         public async Task Atualizar(long id, Cliente cliente)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "update cliente set nome=@nome, cpf=@cpf, idade=@idade where id=@id";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@nome", cliente.Nome);
@@ -103,10 +104,10 @@ namespace Infra
 
         public async Task ExcluirAsync(long id)
         {
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
                 string comandoSQL = "delete from cliente where id=@id";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@id", id);
@@ -119,16 +120,16 @@ namespace Infra
         {
             Cliente cliente = null;
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
-                string comandoSQL = "select top 1 nome, cpf, id from cliente where cpf = @cpf";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                string comandoSQL = "select nome, cpf, id from cliente where cpf = @cpf limit 1";
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@cpf", cpf);
 
                 con.Open();
-                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {
@@ -146,16 +147,16 @@ namespace Infra
         {
             Cliente cliente = null;
 
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            using (var con = _apiClientesContext.CriarConexao())
             {
-                string comandoSQL = "select top 1 nome, cpf from cliente where id = @id";
-                SqlCommand cmd = new SqlCommand(comandoSQL, con);
+                string comandoSQL = "select nome, cpf from cliente where id = @id limit 1";
+                var cmd = _apiClientesContext.CriarComando(comandoSQL, con);
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@id", id);
 
                 con.Open();
-                SqlDataReader reader = await cmd.ExecuteReaderAsync();
+                var reader = await cmd.ExecuteReaderAsync();
 
                 while (reader.Read())
                 {

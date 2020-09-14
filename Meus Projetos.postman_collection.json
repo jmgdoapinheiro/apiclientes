@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "778853fd-fa02-48df-b757-47389550f1bb",
+		"name": "Meus Projetos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "apiclientes",
+			"item": [
+				{
+					"name": "endereco",
+					"item": [
+						{
+							"name": "listar endereços",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cliente\": \"\",\r\n    \"cpf\":\"\",\r\n    \"logradouro\":\"\",\r\n    \"bairro\":\"\",\r\n    \"cidade\": \"\",\r\n    \"estado\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/endereco/listar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"endereco",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "excluir endereco",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:63731/api/endereco/excluir/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"endereco",
+										"excluir",
+										"4"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar endereço",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cliente\": \"\",\r\n    \"cpf\":\"220.892.260-30\",\r\n    \"logradouro\":\"Rua Dias\",\r\n    \"bairro\":\"Barra\",\r\n    \"cidade\": \"Rio de Janeiro\",\r\n    \"estado\": \"Rio de Janeiro\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/endereco/cadastrar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"endereco",
+										"cadastrar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "atualizar endereço",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"cliente\": \"\",\r\n    \"cpf\":\"862.687.540-18\",\r\n    \"logradouro\":\"Rua Aristides\",\r\n    \"bairro\":\"Penha\",\r\n    \"cidade\": \"Rio de Janeiro\",\r\n    \"estado\": \"Rio de Janeiro\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/endereco/atualizar/4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"endereco",
+										"atualizar",
+										"4"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "cliente",
+					"item": [
+						{
+							"name": "listar clientes",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"\",\r\n    \"cpf\":\"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/cliente/listar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"cliente",
+										"listar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "atualizar cliente",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"Pedro Caio\",\r\n    \"cpf\":\"220.892.260-30\",\r\n    \"dataNascimento\":\"2011-01-01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/cliente/atualizar/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"cliente",
+										"atualizar",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "cadastrar cliente",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"nome\": \"João\",\r\n    \"cpf\":\"220.892.260-30\",\r\n    \"dataNascimento\":\"2005-01-01\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:63731/api/cliente/cadastrar",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"cliente",
+										"cadastrar"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "excluir cliente",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:63731/api/cliente/excluir/2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "63731",
+									"path": [
+										"api",
+										"cliente",
+										"excluir",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

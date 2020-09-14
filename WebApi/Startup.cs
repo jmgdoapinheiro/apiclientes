@@ -1,6 +1,7 @@
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
 using Infra;
+using Infra.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +30,7 @@ namespace WebApi
             services.AddTransient<IClienteRepository, ClienteRepository>();
             services.AddTransient<IEnderecoService, EnderecoService>();
             services.AddTransient<IEnderecoRepository, EnderecoRepository>();
+            services.AddTransient<IApiClientesContext, ApiClientesContext>();
 
             services.AddSwaggerGen(swagger =>
             {

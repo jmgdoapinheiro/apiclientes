@@ -24,7 +24,7 @@ namespace Service
             {
                 return CriarResposta(OK, true, null, await _enderecoRepository.ListarAsync(enderecoDto));
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 return CriarResposta<EnderecoDto>(INTERNAL_SERVER_ERROR, false, "Ocorreu um erro ao tentar listar enderecos. Favor aguardar uns minutos e tentar novamente.");
             }
