@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces.Repositories;
 using Domain.Models;
+using Domain.ValueObjects;
 using Infra.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -31,7 +32,7 @@ namespace Infra
                 string filter = "";
 
                 if (!string.IsNullOrWhiteSpace(clienteDto.Cpf))
-                    filter += "cpf like " + "'%" + clienteDto.Cpf + "%'";
+                    filter += "cpf like " + "'%" + Cpf.DesformatarNumero(clienteDto.Cpf) + "%'";
 
                 if (!string.IsNullOrWhiteSpace(clienteDto.Nome))
                 {
@@ -78,7 +79,7 @@ namespace Infra
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@nome", cliente.Nome);
-                cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.Numero);
+                cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.NumeroDesformatado);
                 cmd.Parameters.AddWithValue("@idade", cliente.Idade);
                 con.Open();
                 await cmd.ExecuteNonQueryAsync();
@@ -94,7 +95,7 @@ namespace Infra
 
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@nome", cliente.Nome);
-                cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.Numero);
+                cmd.Parameters.AddWithValue("@cpf", cliente.Cpf.NumeroDesformatado);
                 cmd.Parameters.AddWithValue("@idade", cliente.Idade);
                 cmd.Parameters.AddWithValue("@id", id);
                 con.Open();

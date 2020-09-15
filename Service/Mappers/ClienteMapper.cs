@@ -17,7 +17,9 @@ namespace Service.Mappers
             var cliente = new Cliente(dto.Nome, dto.Cpf, dataNascimento);
 
             cliente.AdicionarIdade();
-            
+
+            cliente.Cpf.AdicionarNumeroDesformatado(cliente.Cpf.Numero);
+
             return cliente;
         }
     }

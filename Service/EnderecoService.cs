@@ -1,6 +1,7 @@
 ﻿using Domain.DTOs;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.Services;
+using Domain.ValueObjects;
 using Infra.CrossCutting;
 using Service.Mappers;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace Service
         {
             try
             {
-                var cliente = await _clienteRepository.ObterAsync(dto.Cpf);
+                var cliente = await _clienteRepository.ObterAsync(Cpf.DesformatarNumero(dto.Cpf));
 
                 if (cliente == null) return CriarResposta(UNPROCESSABLE_ENTITY, false, "Cliente inexistente.");
 

@@ -5,7 +5,7 @@ USE `apiclientes`;
 CREATE TABLE cliente (
     `id`    BIGINT        AUTO_INCREMENT  NOT NULL,
     `nome`  NVARCHAR (30) NOT NULL,
-    `cpf`   NCHAR (14)    NOT NULL,
+    `cpf`   BIGINT (11)    NOT NULL,
     `idade` INT           NULL,
     PRIMARY KEY (`id` ASC),
     UNIQUE (`cpf` ASC)

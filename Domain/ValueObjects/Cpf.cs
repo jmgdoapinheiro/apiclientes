@@ -10,6 +10,7 @@ namespace Domain.ValueObjects
         }
 
         public string Numero { get; private set; }
+        public string NumeroDesformatado { get; private set; }
 
         public bool EValido()
         {
@@ -39,8 +40,7 @@ namespace Domain.ValueObjects
         {
             MensagemValidacao = "É necessário que o Cpf seja um cpf válido.";
 
-            string valor = Numero.Replace(".", "");
-            valor = valor.Replace("-", "");
+            string valor = DesformatarNumero(Numero);
 
             if (valor.Length != 11)
                 return false;
@@ -94,6 +94,16 @@ namespace Domain.ValueObjects
 
             MensagemValidacao = null;
             return true;
+        }
+
+        public void AdicionarNumeroDesformatado(string numero)
+        {
+            NumeroDesformatado = numero.Replace(".", "").Replace("-", "");
+        }
+
+        public static string DesformatarNumero(string numero)
+        {
+            return numero.Replace(".", "").Replace("-", "");
         }
     }
 }

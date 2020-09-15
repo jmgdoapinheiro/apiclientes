@@ -81,7 +81,7 @@ namespace Infra
                 string filter = "";
 
                 if (!string.IsNullOrWhiteSpace(enderecoDto.Cpf))
-                    filter += "cpf like " + "'%" + enderecoDto.Cpf + "%'";
+                    filter += "cpf like " + "'%" + Cpf.DesformatarNumero(enderecoDto.Cpf) + "%'";
 
                 if (!string.IsNullOrWhiteSpace(enderecoDto.Cliente))
                 {
